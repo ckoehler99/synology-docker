@@ -16,17 +16,17 @@ services:
         loki-url: "http://diskstation:3100/loki/api/v1/push"
 
 
-  mysql:
-    container_name: mysql
-    image: mysql:5
-    ports:
-      - 6603:3306
-    environment:
-      MYSQL_ROOT_PASSWORD: "mypassword"
-    volumes:
-      - /volume1/docker/mysql:/var/lib/mysql
-    networks:
-      - monitoring
+#  mysql:
+#    container_name: mysql
+#    image: mysql:5
+#    ports:
+#      - 6603:3306
+#    environment:
+#      MYSQL_ROOT_PASSWORD: "mypassword"
+#    volumes:
+#      - /volume1/docker/mysql:/var/lib/mysql
+#    networks:
+#      - monitoring
 
   mosquitto:
     container_name: mosquitto
