@@ -13,6 +13,16 @@ services:
     networks:
       - monitoring
 
+  mosquitto:
+    image: eclipse-mosquitto:2
+    ports:
+      - 1883:1883
+      - 9001:9001
+    volumes:
+      - /volume1/docker/mosquitto:/mosquitto
+    user: root
+    restart: always
+
 networks:
   backend:
     internal: true
