@@ -1,9 +1,24 @@
 version: "3"
 services:
 
+  influxdb:
+    container_name: influxdb
+    image: influxdb:2.4.0
+    ports:
+      - 8086:8086
+    volumes:
+      - /volume1/docker/mysql:/var/lib/mysql
+    user: root
+    restart: always
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://diskstation:3100/loki/api/v1/push"
+
+
   mysql:
-    image: mysql:5
     container_name: mysql
+    image: mysql:5
     ports:
       - 6603:3306
     environment:
