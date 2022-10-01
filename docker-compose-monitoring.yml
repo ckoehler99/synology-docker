@@ -15,6 +15,28 @@ services:
       options:
         loki-url: "http://diskstation:3100/loki/api/v1/push"
 
+  node-exporter:
+    container_name: node-exporter
+    image: prom/node-exporter:latest
+    ports:
+      - 9100:9100
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    user: root
+    restart: always
+    command: 
+      - path.procfs=/host/proc
+      - path.sysfs=/host/sys
+      - collector.filesystem.ignored-mount-points
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://diskstation:3100/loki/api/v1/push"
+    networks:
+      - monitoring   
+
   grafana:
     container_name: grafana
     image: grafana/grafana-oss:latest
@@ -80,7 +102,7 @@ services:
     links:
       - influxdb
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - /volume1/docker/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
     depends_on:
       - influxdb
