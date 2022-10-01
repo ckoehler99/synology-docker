@@ -25,11 +25,13 @@ services:
       - /sys:/host/sys:ro
       - /:/rootfs:ro
     user: root
-    restart: always
     command: 
-      - path.procfs=/host/proc
-      - path.sysfs=/host/sys
-      - collector.filesystem.ignored-mount-points
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    restart: unless-stopped
+    labels:
+      org.label-schema.group: "monitoring"
     logging:
       driver: loki
       options:
