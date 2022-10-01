@@ -15,6 +15,20 @@ services:
       options:
         loki-url: "http://diskstation:3100/loki/api/v1/push"
 
+  grafana:
+    container_name: grafana
+    image: grafana/grafana-oss:latest
+    ports:
+      - 3000:3000
+    volumes:
+      - /volume1/docker/grafana/config:/etc/grafana
+      - /volume1/docker/grafana/data:/var/lib/grafana
+    user: root
+    restart: always
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://diskstation:3100/loki/api/v1/push"
 
 #  mysql:
 #    container_name: mysql
