@@ -14,6 +14,7 @@ services:
       - monitoring
 
   mosquitto:
+    container_name: mosquitto
     image: eclipse-mosquitto:2
     ports:
       - 1883:1883
