@@ -1,0 +1,96 @@
+version: "3"
+services:
+
+  influxdb:
+    container_name: influxdb
+    image: influxdb:2.4.0
+    ports:
+      - 8086:8086
+    volumes:
+      - /volume1/docker/influxdb/data:/var/lib/influxdb2
+    user: root
+    restart: always
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://diskstation:3100/loki/api/v1/push"
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana-oss:latest
+    depends_on: 
+      - influxdb
+      - loki
+    ports:
+      - 3000:3000
+    volumes:
+      - /volume1/docker/grafana/config:/etc/grafana
+      - /volume1/docker/grafana/data:/var/lib/grafana
+    user: root
+    restart: always
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://diskstation:3100/loki/api/v1/push"
+    networks:
+      - monitoring    
+
+  loki:
+    container_name: loki
+    image: grafana/loki:2.6.0
+    depends_on: 
+      - promtail
+    ports:
+      - "3100:3100"
+    command: -config.file=/mnt/config/loki-config.yaml
+    user: root
+    restart: always
+    volumes:
+      - /volume1/docker/loki/config:/mnt/config
+      - /volume1/docker/loki/data:/tmp/loki
+    networks:
+      - monitoring
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://diskstation:3100/loki/api/v1/push"
+
+  promtail:
+    container_name: promtail
+    image: grafana/promtail:2.6.0
+    user: root
+    restart: always
+    volumes:
+      - /var/log:/var/log
+      - /volume1/docker/promtail:/config
+      - /volume1/@docker:/var/lib/docker 
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - monitoring
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://diskstation:3100/loki/api/v1/push"
+
+  telegraf:
+    container_name: telegraf
+    image: telegraf
+    user: root
+    restart: always
+    links:
+      - influxdb
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /volume1/docker/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    depends_on:
+      - influxdb
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://diskstation:3100/loki/api/v1/push"
+
+networks:
+  backend:
+    internal: true
+  monitoring:
+    driver: bridge
