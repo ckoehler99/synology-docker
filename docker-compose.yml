@@ -29,6 +29,8 @@ services:
       driver: loki
       options:
         loki-url: "http://diskstation:3100/loki/api/v1/push"
+    networks:
+      - monitoring    
 
 #  mysql:
 #    container_name: mysql
@@ -52,6 +54,10 @@ services:
       - /volume1/docker/mosquitto:/mosquitto
     user: root
     restart: always
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://diskstation:3100/loki/api/v1/push"
 
   traefik:
     image: "traefik:v2.8"
@@ -68,7 +74,10 @@ services:
     volumes:
       - /volume1/docker/traefik/config:/etc/traefik
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://diskstation:3100/loki/api/v1/push"
   whoami:
     image: "traefik/whoami"
     container_name: "simple-service"
@@ -76,7 +85,45 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.whoami.rule=Host(`whoami.localhost`)"
       - "traefik.http.routers.whoami.entrypoints=web"
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://diskstation:3100/loki/api/v1/push"
 
+  loki:
+    container_name: loki
+    image: grafana/loki:2.6.0
+    ports:
+      - "3100:3100"
+    command: -config.file=/mnt/config/loki-config.yaml
+    user: root
+    restart: always
+    volumes:
+      - /volume1/docker/loki/config:/mnt/config
+      - /volume1/docker/loki/data:/tmp/loki
+    networks:
+      - monitoring
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://diskstation:3100/loki/api/v1/push"
+
+  promtail:
+    container_name: promtail
+    image: grafana/promtail:2.6.0
+    user: root
+    restart: always
+    volumes:
+      - /var/log:/var/log
+      - /volume1/docker/promtail:/config
+      - /volume1/@docker:/var/lib/docker 
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - monitoring
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://diskstation:3100/loki/api/v1/push"
 
 networks:
   backend:
