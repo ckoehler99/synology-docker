@@ -7,7 +7,7 @@ services:
     ports:
       - 8086:8086
     volumes:
-      - /volume1/docker/mysql:/var/lib/mysql
+      - /volume1/docker/influxdb/data:/var/lib/influxdb2
     user: root
     restart: always
     logging:
