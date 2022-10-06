@@ -49,8 +49,41 @@ services:
       driver: loki
       options:
         loki-url: "http://diskstation:3100/loki/api/v1/push"
+  
+  nodered:
+    container_name: nodered
+    image: nodered/node-red:latest
+    ports:
+      - 1880:1880
+      - 2055:2055
+      - 2056:2056
+    volumes:
+      - /volume1/docker/nodered:/data
+    user: root
+    restart: always
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://diskstation:3100/loki/api/v1/push"
 
- 
+  homeassistant:
+    container_name: homeassistant
+    image: homeassistant/home-assistant:latest
+    ports:
+      - 8123:8123
+    volumes:
+      - /run/udev:/run/udev:ro
+      - /volume1/docker/homeassistant:/config
+      - /etc/localtime:/etc/localtime:ro
+    user: root
+    restart: unless-stopped
+    devices:
+      - /dev/ttyUSB0
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://diskstation:3100/loki/api/v1/push"
+
 #  mysql:
 #    container_name: mysql
 #    image: mysql:5

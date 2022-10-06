@@ -114,6 +114,27 @@ services:
       driver: loki
       options:
         loki-url: "http://diskstation:3100/loki/api/v1/push"
+  
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    ports:
+      - 9090:9090
+    volumes:
+      - /volume1/docker/prometheus/config:/etc/prometheus
+      - /volume1/docker/prometheus/data:/prometheus
+    user: root
+    restart: always
+    command: 
+      - '--storage.tsdb.retention.time=1y'
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://diskstation:3100/loki/api/v1/push"
+    networks:
+      - monitoring
 
 networks:
   backend:
