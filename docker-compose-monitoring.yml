@@ -87,13 +87,11 @@ services:
     ports:
       - 1514:1514/udp
       - 1514:1514/tcp
-      - 9080:9080/tcp
     volumes:
       - /var/log:/var/log
       - /volume1/docker/promtail:/config
       - /volume1/@docker:/var/lib/docker 
-    command: 
-      - config.file=/config/config.yml
+    command: -config.file=/config/config.yml
     networks:
       - monitoring
     logging:
