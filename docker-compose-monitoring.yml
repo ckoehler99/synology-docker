@@ -90,7 +90,8 @@ services:
       - /var/log:/var/log
       - /volume1/docker/promtail:/config
       - /volume1/@docker:/var/lib/docker 
-    command: -config.file=/config/config.yml
+    command: 
+      - config.file=/config/config.yml
     networks:
       - monitoring
     logging:
