@@ -69,9 +69,9 @@ services:
   homeassistant:
     container_name: homeassistant
     image: homeassistant/home-assistant:latest
+    network_mode: host
     ports:
       - 8123:8123
-      - 8124:8124
     volumes:
       - /run/udev:/run/udev:ro
       - /volume1/docker/homeassistant:/config
