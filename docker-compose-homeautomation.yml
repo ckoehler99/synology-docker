@@ -71,6 +71,7 @@ services:
     image: homeassistant/home-assistant:latest
     ports:
       - 8123:8123
+      - 8124:8124
     volumes:
       - /run/udev:/run/udev:ro
       - /volume1/docker/homeassistant:/config
