@@ -142,9 +142,9 @@ services:
     ports:
       - 9042:9042
     restart: always
-    command: 
-      - '--username=username_fritz'
-      - '--password=password_fritz'
+    environment:
+      - username=${username_fritz}
+      - password=${password_fritz}
     logging:
       driver: loki
       options:
