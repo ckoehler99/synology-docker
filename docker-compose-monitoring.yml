@@ -136,6 +136,22 @@ services:
     networks:
       - monitoring
 
+  fritzbox_exporter:
+    container_name: fritzbox_exporter
+    image: ckoehler99/fritzbox_exporter
+    ports:
+      - 9042:9042
+    restart: always
+    command: 
+      - '--username=username_fritz'
+      - '--password=password_fritz'
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://diskstation:3100/loki/api/v1/push"
+    networks:
+      - monitoring
+
 networks:
   backend:
     internal: true
