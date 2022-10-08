@@ -40,8 +40,8 @@ services:
     volumes:
       - /volume1/docker/paperless/data:/usr/src/paperless/data
       - /volume1/docker/paperless/media:/usr/src/paperless/media
-      - ./export:/usr/src/paperless/export
-      - ./consume:/usr/src/paperless/consume
+      - /volume1/docker/paperless/export:/usr/src/paperless/export
+      - /volume1/docker/paperless/consume:/usr/src/paperless/consume
     environment:
       PAPERLESS_REDIS: redis://broker:6379
       PAPERLESS_DBHOST: db
