@@ -47,6 +47,19 @@ services:
       PAPERLESS_REDIS: redis://broker:6379
       PAPERLESS_DBHOST: db
       PAPERLESS_OCR_LANGUAGE: deu
+      PAPERLESS_TIKA_ENABLED: 1
+      PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://gotenberg:3000
+      PAPERLESS_TIKA_ENDPOINT: http://tika:9998
+
+  gotenberg:
+    image: thecodingmachine/gotenberg
+    restart: unless-stopped
+    environment:
+      DISABLE_GOOGLE_CHROME: 1
+
+  tika:
+    image: apache/tika
+    restart: unless-stopped
 
 # The UID and GID of the user used to run paperless in the container. Set this
 # to your UID and GID on the host so that you have write access to the
