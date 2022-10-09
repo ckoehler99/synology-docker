@@ -48,14 +48,14 @@ services:
       PAPERLESS_DBHOST: db
       PAPERLESS_OCR_LANGUAGE: deu
       PAPERLESS_TIKA_ENABLED: 1
-      PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://diskstation:8001
+      PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://diskstation:8099
       PAPERLESS_TIKA_ENDPOINT: http://tika:9998
 
   gotenberg:
     image: gotenberg/gotenberg:7
     restart: unless-stopped
     ports:
-      - 3000:8001
+      - 3000:8099
     environment:
       DISABLE_GOOGLE_CHROME: 1
 
