@@ -15,40 +15,6 @@ services:
       driver: loki
       options:
         loki-url: "http://diskstation:3100/loki/api/v1/push"
-
-  traefik:
-    image: "traefik:v2.8"
-    container_name: "traefik"
-    command:
-      #- "--log.level=DEBUG"
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
-    ports:
-      - "88:80"
-      - "8088:8080"
-    volumes:
-      - /volume1/docker/traefik/config:/etc/traefik
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-    logging:
-      driver: loki
-      options:
-        loki-url: "http://diskstation:3100/loki/api/v1/push"
-  
-  whoami:
-    image: "traefik/whoami"
-    container_name: "simple-service"
-    depends_on: 
-      - traefik
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.whoami.rule=Host(`whoami.localhost`)"
-      - "traefik.http.routers.whoami.entrypoints=web"
-    logging:
-      driver: loki
-      options:
-        loki-url: "http://diskstation:3100/loki/api/v1/push"
   
   nodered:
     container_name: nodered
@@ -65,34 +31,3 @@ services:
       driver: loki
       options:
         loki-url: "http://diskstation:3100/loki/api/v1/push"
-
-  homeassistant:
-    container_name: homeassistant
-    image: homeassistant/home-assistant:latest
-    network_mode: host
-    ports:
-      - 8123:8123
-    volumes:
-      - /run/udev:/run/udev:ro
-      - /volume1/docker/homeassistant:/config
-      - /etc/localtime:/etc/localtime:ro
-    user: root
-    restart: unless-stopped
-    devices:
-      - /dev/ttyUSB0
-    logging:
-      driver: loki
-      options:
-        loki-url: "http://diskstation:3100/loki/api/v1/push"
-
-#  mysql:
-#    container_name: mysql
-#    image: mysql:5
-#    ports:
-#      - 6603:3306
-#    environment:
-#      MYSQL_ROOT_PASSWORD: "mypassword"
-#    volumes:
-#      - /volume1/docker/mysql:/var/lib/mysql
-#    networks:
-#      - monitoring
