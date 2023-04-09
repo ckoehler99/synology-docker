@@ -156,7 +156,7 @@ services:
 
   deye-solar-exporter:
     container_name: deye-solar-exporter
-    image: 	ckoehler99/deye-solar-exporter
+    image: 	ghcr.io/ckoehler99/deye-solar-exporter:master
     ports:
       - 9942:9942
     restart: always
