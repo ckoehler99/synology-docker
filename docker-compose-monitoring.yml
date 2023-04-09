@@ -156,7 +156,7 @@ services:
 
   deye-solar-exporter:
     container_name: deye-solar-exporter
-    image: deye-solar-exporter
+    image: 	ckoehler99/deye-solar-exporter
     ports:
       - 9942:9942
     restart: always
