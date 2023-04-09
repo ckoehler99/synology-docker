@@ -154,6 +154,23 @@ services:
     networks:
       - monitoring
 
+  deye-solar-exporter:
+    container_name: deye-solar-exporter
+    image: deye-solar-exporter
+    ports:
+      - 9942:9942
+    restart: always
+    environment:
+      - DEYE_IP=${ip_deye}
+      - DEYE_USER=${username_deye}
+      - DEYE_PASSWORD=${password_deye}
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://diskstation:3100/loki/api/v1/push"
+    networks:
+      - monitoring
+
 networks:
   backend:
     internal: true
