@@ -71,8 +71,6 @@ services:
     image: telegraf
     user: root
     restart: always
-    links:
-      - influxdb
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - /volume1/docker/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
