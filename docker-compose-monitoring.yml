@@ -1,20 +1,6 @@
 version: "3"
 services:
 
-  influxdb:
-    container_name: influxdb
-    image: influxdb:2.4.0
-    ports:
-      - 8086:8086
-    volumes:
-      - /volume1/docker/influxdb/data:/var/lib/influxdb2
-    user: root
-    restart: always
-    logging:
-      driver: loki
-      options:
-        loki-url: "http://diskstation:3100/loki/api/v1/push"
-
   node-exporter:
     container_name: node-exporter
     image: prom/node-exporter:latest
@@ -38,26 +24,6 @@ services:
         loki-url: "http://diskstation:3100/loki/api/v1/push"
     networks:
       - monitoring   
-
-  grafana:
-    container_name: grafana
-    image: grafana/grafana-oss:latest
-    depends_on: 
-      - influxdb
-      - loki
-    ports:
-      - 3000:3000
-    volumes:
-      - /volume1/docker/grafana/config:/etc/grafana
-      - /volume1/docker/grafana/data:/var/lib/grafana
-    user: root
-    restart: always
-    logging:
-      driver: loki
-      options:
-        loki-url: "http://diskstation:3100/loki/api/v1/push"
-    networks:
-      - monitoring    
 
   loki:
     container_name: loki
